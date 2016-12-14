@@ -32,7 +32,7 @@ DEFAULT_BACKEND = Backend.VMD
 
 
 # Import primitives
-from topology import Topology
+from .topology import Topology
 
 # Import backends
 from .backends import *
