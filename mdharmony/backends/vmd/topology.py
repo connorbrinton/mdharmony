@@ -12,6 +12,7 @@ with silence():
     import vmd
 from VMD import molecule
 
+from .atomgroup import VMDAtomGroup
 from .utilities import get_vmd_file_type
 
 
@@ -30,3 +31,13 @@ class VMDTopology(mdharmony.Topology):
 
     def __init__(self, molid):
         self.molid = molid
+
+    @property
+    def atoms(self):
+        atom_count = molecule.numatoms(self.molid)
+        indices = list(range(atom_count))
+        return VMDAtomGroup(self.molid, indices)
+
+    @property
+    def bonds(self):
+        raise NotImplementedError("Not yet implemented...")

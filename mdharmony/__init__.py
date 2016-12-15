@@ -28,10 +28,11 @@ Backend = type('Backend', (), {
 })
 
 # Default backend
-DEFAULT_BACKEND = Backend.VMD
+DEFAULT_BACKEND = None
 
 
 # Import primitives
+from .atomgroup import AtomGroup
 from .topology import Topology
 
 # Import backends
