@@ -20,8 +20,8 @@ from .utilities import get_vmd_file_type
 class VMDTopology(mdharmony.Topology):
     @staticmethod
     def load(*args, **kwargs):
-        # Extract path
-        path = args[0]
+        # Unpack path
+        path, = args
 
         # Load topology from path
         with silence():
@@ -40,4 +40,4 @@ class VMDTopology(mdharmony.Topology):
 
     @property
     def bonds(self):
-        raise NotImplementedError("Not yet implemented...")
+        return self.atoms.bonds

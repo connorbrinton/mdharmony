@@ -33,7 +33,9 @@ DEFAULT_BACKEND = None
 
 # Import primitives
 from .atomgroup import AtomGroup
+from .coordinates import Coordinates
 from .topology import Topology
+from .trajectory import Trajectory
 
 # Import backends
 from .backends import *

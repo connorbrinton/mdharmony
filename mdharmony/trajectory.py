@@ -1,5 +1,5 @@
 """
-Module defining Topology class.
+Module defining Trajectory class.
 """
 from __future__ import absolute_import
 
@@ -7,7 +7,7 @@ import mdharmony
 import mdharmony.registry
 
 
-class Topology(object):
+class Trajectory(object):
     @staticmethod
     def load(*args, **kwargs):
         """
@@ -26,13 +26,7 @@ class Topology(object):
         if backend is None:
             raise Exception("No backend specified.")
 
-        # Find backend topology loader
-        return mdharmony.registry.TOPOLOGY_CLASSES[backend].load(*args, **kwargs)
+        # Find backend trajectory loader
+        return mdharmony.registry.TRAJECTORY_CLASSES[backend].load(*args, **kwargs)
 
-    @property
-    def atoms(self):
-        raise NotImplementedError("Not implemented for abstract Topology.")
-
-    @property
-    def bonds(self):
-        raise NotImplementedError("Not implemented for abstract Topology.")
+    # TODO: Define interface

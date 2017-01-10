@@ -14,12 +14,11 @@ from VMD import atomsel
 
 
 VMD_ATOM_PROPERTIES = {
-    'serial': 'serial',
-    'name': 'name',
-    'resname': 'resname',
     'chain': 'chain',
-    'resseq': 'resid', # TODO: Replace with more accurate match
     'segment': 'segid',
+    'resseq': 'resid', # TODO: Replace with more accurate match
+    'resname': 'resname',
+    'name': 'name',
     'element': 'element',
     'charge': 'charge'
 }
@@ -28,19 +27,38 @@ VMD_ATOM_PROPERTIES = {
 class VMDAtomGroup(mdharmony.AtomGroup):
     def __init__(self, molid, indices):
         self.molid = molid
-        self.indices = np.array(indices)
+        self._indices = np.array(indices)
 
     def __len__(self):
-        return len(self.indices)
+        return len(self._indices)
 
     def __iter__(self):
-        for index in self.indices:
+        for index in self._indices:
             yield self[index]
 
     def __getitem__(self, selector):
         if np.isscalar(selector):
             selector = [selector]
-        return VMDAtomGroup(self.molid, self.indices[selector])
+        return VMDAtomGroup(self.molid, self._indices[selector])
+
+    @property
+    def index(self):
+        return self._indices
+
+    @property
+    def indices(self):
+        return self._indices
+
+    @property
+    def selection(self):
+        query = "index " + " ".join(str(index) for index in self._indices)
+        return atomsel.atomsel(query, molid=self.molid)
+
+    @property
+    def bonds(self):
+        for index, partners in enumerate(self.selection.bonds):
+            for partner in partners:
+                yield self[[index, partner]]
 
 
 # Define property generator
@@ -50,9 +68,7 @@ def generate_property(name):
 
     # Define attribute getter
     def get_attribute(vmd_atom_group):
-        query = "index " + " ".join(str(index) for index in vmd_atom_group.indices)
-        selection = atomsel.atomsel(query, molid=vmd_atom_group.molid).get(attribute)
-        return np.asarray(selection)
+        return np.asarray(vmd_atom_group.selection.get(attribute))
 
     # Return property
     return property(get_attribute)
@@ -61,7 +77,14 @@ def generate_property(name):
 # Define property injector
 def inject_properties():
     for atom_property in ATOM_PROPERTIES:
+        # Load the singular name
         name = atom_property.singular
+
+        # Skip index/indices, we handle them manually
+        if name == "index":
+            continue
+
+        # Add a getter property for the atom property
         setattr(VMDAtomGroup, name, generate_property(name))
 
 
