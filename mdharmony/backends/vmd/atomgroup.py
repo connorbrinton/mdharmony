@@ -7,9 +7,7 @@ import mdharmony
 from mdharmony.atomproperty import ATOM_PROPERTIES
 from mdharmony.silencer import silence
 
-with silence():
-    import vmd
-from VMD import atomsel
+from vmd import atomsel
 
 
 

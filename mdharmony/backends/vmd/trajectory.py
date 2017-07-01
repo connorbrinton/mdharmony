@@ -10,9 +10,7 @@ import mdharmony.registry
 from mdharmony.silencer import silence
 
 # TODO: Make these imports optional for program execution (especially for other backends)
-with silence():
-    import vmd
-from VMD import molecule
+from vmd import molecule
 
 from .topology import VMDTopology
 from .atomgroup import VMDAtomGroup
