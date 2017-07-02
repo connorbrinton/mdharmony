@@ -2,9 +2,9 @@
 A context used for temporarily silencing stdout, effectively sending it to
 /dev/null. From http://stackoverflow.com/questions/977840/redirecting-fortran-called-via-f2py-output-in-python/978264#978264
 """
-
 import contextlib
 import os
+
 
 @contextlib.contextmanager
 def silence():
